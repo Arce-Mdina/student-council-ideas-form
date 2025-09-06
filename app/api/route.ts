@@ -46,7 +46,7 @@ export async function POST(req: Request) {
         <p><strong>Message:</strong></p>
         <div style="white-space:pre-wrap;font:inherit">${escapeHtml(message)}</div>
         <hr />
-        <p style="color:#666;font-size:12px">Sent via the Student Council contact form (council-ideas.nais.fun).</p>
+        <p style="color:#666;font-size:12px">Sent via the Student Council contact form (student-ideas.nais.fun).</p>
       </div>
     `;
 
