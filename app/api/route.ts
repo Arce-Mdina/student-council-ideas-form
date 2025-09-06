@@ -50,7 +50,7 @@ export async function POST(req: Request) {
       </div>
     `;
 
-    const result = await resend.emails.send({
+    const { data, error } = await resend.emails.send({
       from: process.env.CONTACT_FROM!,       // e.g. "Student Council <noreply@your-domain.com>"
       to,
       // If you need privacy among recipients:
@@ -60,14 +60,14 @@ export async function POST(req: Request) {
       html,
     });
 
-    if ((result as any).error) {
+    if (error) {
       return NextResponse.json(
-        { ok: false, error: (result as any).error.message || "Email send failed" },
+        { ok: false, error: error.message || "Email send failed" },
         { status: 500 }
       );
     }
 
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true, id: data?.id ?? null });
   } catch {
     return NextResponse.json({ ok: false, error: "Server error" }, { status: 500 });
   }
