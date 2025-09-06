@@ -54,7 +54,6 @@ export async function POST(req: Request) {
       from: process.env.CONTACT_FROM!,       // e.g. "Student Council <noreply@your-domain.com>"
       to,
       // If you need privacy among recipients:
-      bcc: ["chang_xu@naisdublin.com", "hui_xu@naisdublin.com"],
       replyTo: email,
       subject: `New Student Council Message — ${name}`,
       html,
