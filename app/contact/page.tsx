@@ -33,7 +33,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-gray-50 px-4 py-16 justify-center align-items-center flex flex-col">
-      <div className="mx-auto w-xl rounded-2xl bg-white p-8 shadow">
+      <div className="mx-auto sm:w-xl max-w-screen rounded-2xl bg-white p-8 shadow">
         <h1 className="mb-6 text-2xl font-semibold">Contact the Student Council</h1>
 
         <form onSubmit={onSubmit} className="space-y-4">
