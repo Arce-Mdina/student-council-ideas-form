@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
 import Image from "next/image";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -78,20 +79,43 @@ export default function RootLayout({
             </div>
 
             {/* Mobile dropdown (simple) */}
-            <div id="mobile-menu" className="md:hidden relative z-50 overflow-hidden origin-top transform-gpu transition-[max-height,transform] duration-450 ease-in-out max-h-0 scale-y-95 peer-checked:max-h-80 peer-checked:scale-y-100">
-              <ul className="my-2">
-                <li>
-                  <Link href="/" className="block px-4 py-3 font-semibold text-slate-900 hover:text-slate-600">Home</Link>
-                </li>
-                <li>
-                  <Link href="/events" className="block px-4 py-3 font-semibold text-slate-900 hover:text-slate-600">Events</Link>
-                </li>
-                <li>
-                  <Link href="/contact" className="block px-4 py-3 font-semibold text-slate-900 hover:text-slate-600">Contact Us</Link>
-                </li>
-              </ul>
+            <div id="mobile-menu" className="md:hidden relative z-50 overflow-hidden origin-top transform-gpu transition-[max-height,transform] duration-400 ease-in-out max-h-0 scale-y-95 peer-checked:max-h-80 peer-checked:scale-y-100">
+              {/* Wrap the list in a label so any click inside will uncheck the nav-toggle (close the menu) */}
+              <label htmlFor="nav-toggle" aria-label="Close menu" className="block">
+                <ul className="my-2">
+                  <li>
+                    <Link href="/" className="block px-4 py-3 font-semibold text-slate-900 hover:text-slate-600">Home</Link>
+                  </li>
+                  <li>
+                    <Link href="/events" className="block px-4 py-3 font-semibold text-slate-900 hover:text-slate-600">Events</Link>
+                  </li>
+                  <li>
+                    <Link href="/contact" className="block px-4 py-3 font-semibold text-slate-900 hover:text-slate-600">Contact Us</Link>
+                  </li>
+                </ul>
+              </label>
             </div>
           </nav>
+          <Script id="close-mobile-menu" strategy="afterInteractive">
+            {`
+              (function(){
+                function closeOnLinkClick(){
+                  var checkbox = document.getElementById('nav-toggle');
+                  var menu = document.getElementById('mobile-menu');
+                  if(!checkbox || !menu) return;
+                  menu.addEventListener('click', function(e){
+                    var link = e.target && (e.target.closest ? e.target.closest('a') : null);
+                    if(link){ checkbox.checked = false; }
+                  });
+                }
+                if(document.readyState === 'loading'){
+                  document.addEventListener('DOMContentLoaded', closeOnLinkClick);
+                } else {
+                  closeOnLinkClick();
+                }
+              })();
+            `}
+          </Script>
         </header>
 
         {children}
