@@ -15,19 +15,29 @@ export default function Home() {
     const formData = new FormData(form);
     const payload = Object.fromEntries(formData.entries());
 
-    const res = await fetch("../api/route", {
+    const res = await fetch("/api", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
       body: JSON.stringify(payload),
     });
 
-    const json = await res.json().catch(() => ({ ok: false, error: "Bad response" }));
-    if (json.ok) {
+    let json: any = null;
+    try {
+      json = await res.json();
+    } catch (e) {
+      // If the response isn't JSON (e.g., 404 HTML), read text for diagnostics
+      const text = await res.text();
+      setStatus("error");
+      setError(!res.ok ? `HTTP ${res.status}: ${text.slice(0, 200)}` : "Unexpected non-JSON response");
+      return;
+    }
+
+    if (res.ok && json?.ok) {
       setStatus("success");
       form.reset();
     } else {
       setStatus("error");
-      setError(json.error || "Something went wrong");
+      setError(json?.error || (res.ok ? "Unknown error" : `HTTP ${res.status}`));
     }
   }
 
@@ -38,7 +48,7 @@ export default function Home() {
 
         <form onSubmit={onSubmit} className="space-y-4">
           {/* Honeypot (hidden) — bots tend to fill everything */}
-          <input type="text" name="website" className="hidden" tabIndex={-1} autoComplete="off" />
+          <input type="text" name="website" className="hidden" tabIndex={-1} autoComplete="off" aria-hidden="true" />
 
           <div>
             <label className="mb-1 block text-sm font-medium text-black">Name</label>
