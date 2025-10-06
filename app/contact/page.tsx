@@ -2,6 +2,11 @@
 
 import { useState } from "react";
 
+type ApiResponse = { ok?: boolean; error?: string };
+function isApiResponse(x: unknown): x is ApiResponse {
+  return typeof x === "object" && x !== null && ("ok" in x || "error" in x);
+}
+
 export default function Home() {
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
@@ -21,10 +26,10 @@ export default function Home() {
       body: JSON.stringify(payload),
     });
 
-    let json: any = null;
+    let data: unknown;
     try {
-      json = await res.json();
-    } catch (e) {
+      data = await res.json();
+    } catch {
       // If the response isn't JSON (e.g., 404 HTML), read text for diagnostics
       const text = await res.text();
       setStatus("error");
@@ -32,12 +37,14 @@ export default function Home() {
       return;
     }
 
-    if (res.ok && json?.ok) {
+    if (res.ok && isApiResponse(data) && data.ok) {
       setStatus("success");
       form.reset();
     } else {
       setStatus("error");
-      setError(json?.error || (res.ok ? "Unknown error" : `HTTP ${res.status}`));
+      setError(
+        isApiResponse(data) && data.error ? data.error : (res.ok ? "Unknown error" : `HTTP ${res.status}`)
+      );
     }
   }
 
