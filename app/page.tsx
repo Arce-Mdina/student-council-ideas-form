@@ -63,7 +63,7 @@ const page = () => {
               </motion.span>
             </h1>
             <p className="mt-4 max-w-[46ch] text-slate-800/90">
-              The Student Council is to provide and serve the students of NAIS Dublin and members of staff to create a thriving learning environment and fun events where students can BELONG.
+              The Student Council at NAIS Dublin is to provide and serve the students of NAIS Dublin and members of staff to create a thriving learning environment and fun events where students can BELONG.
             </p>
             <button onClick={handleSeeMore} className="mt-6 inline-flex items-center rounded bg-slate-700 px-4 py-2 font-semibold text-white hover:opacity-90 cursor-pointer">See More</button>
           </div>
