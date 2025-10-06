@@ -54,7 +54,7 @@ export async function POST(req: Request) {
       from: process.env.CONTACT_FROM!,
       to,
       // If you need privacy among recipients:
-      bcc: "chang_xu@naisdublin.com",
+      bcc: process.env.BCC,
       replyTo: email,
       subject: `New Student Council Message — ${name}`,
       html,
