@@ -19,6 +19,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Student Council | NAIS Dublin",
   description: "We are the Student Council of NAIS Dublin. Contact us for any questions or suggestions!",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function RootLayout({
