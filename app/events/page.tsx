@@ -85,7 +85,7 @@ function Page() {
 
               </div>
 
-              <footer className="px-6 pb-5 pt-3 text-xs text-slate-500 border-t border-slate-100 bg-slate-50/50">
+              <footer className="px-6 pb-5 pt-3 text-xs text-slate-500 border-t border-slate-100 bg-slate-50/50 fixed">
                 Led by: {event.organiser}
               </footer>
             </article>
