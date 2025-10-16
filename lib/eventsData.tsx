@@ -39,12 +39,7 @@ export const eventsData = [
                     entrances to the field.
                 </div>
 
-                <br></br>
-
-                <div>
-                    Henceforth, there are now bins at both of the entrances to the field; 
-                    furthermore, there is a member of staff in charge of cleaning the Astro pitch weekly.
-                </div>
+                {/* <br></br> */}
             </div>
         ),
         status: "Ongoing",
