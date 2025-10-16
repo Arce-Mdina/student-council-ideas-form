@@ -85,7 +85,7 @@ function Page() {
         <div
           role="dialog"
           aria-modal="true"
-          aria-label={`${(selectedEvent as any).title} details`}
+          aria-label="Event details"
           className="fixed inset-0 z-50 flex items-center justify-center"
         >
           {/** Safe alias for selected event fields */}
@@ -117,7 +117,6 @@ function Page() {
               const progress = typeof se['progress'] === 'string' ? (se['progress'] as string) : undefined;
               const result = typeof se['result'] === 'string' ? (se['result'] as string) : undefined;
 
-              const outcomeLabel = status === 'Ongoing' ? 'Progress' : 'Result';
               const outcomeText =
                 status === 'Ongoing'
                   ? (progress ?? result ?? '')
