@@ -73,7 +73,7 @@ function Page() {
                   )}
                 </div>
 
-                <div className="mt-4 text-[15px] leading-relaxed text-slate-700 h-[350px] overflow-y-scroll">
+                <div className="mt-4 text-[15px] leading-relaxed text-slate-700 h-[200px] overflow-y-scroll">
                   {event.description}
                   <button
                     onClick={() => setSelectedEvent(event)}
