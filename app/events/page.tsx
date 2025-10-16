@@ -6,7 +6,7 @@ import { eventsData } from '@/lib/eventsData'
 
 function Page() {
 
-  const [selectedEvent, setSelectedEvent] = useState<any>(null)
+  const [selectedEvent, setSelectedEvent] = useState<unknown | null>(null)
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
