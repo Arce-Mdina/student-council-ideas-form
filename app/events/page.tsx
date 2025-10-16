@@ -2,11 +2,11 @@
 
 import React, { useEffect, useState } from 'react'
 
-import { eventsData, type EventItem } from '@/lib/eventsData'
+import { eventsData } from '@/lib/eventsData'
 
 function Page() {
 
-  const [selectedEvent, setSelectedEvent] = useState<EventItem | null>(null)
+  const [selectedEvent, setSelectedEvent] = useState<any>(null)
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
