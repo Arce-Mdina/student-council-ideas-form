@@ -44,7 +44,7 @@ function Page() {
           {(eventsData as EventLite[]).map((event) => (
             <article
               key={event.title}
-              className="relative rounded-2xl border border-slate-200 bg-white/90 shadow-sm hover:shadow-lg transition-shadow duration-200 overflow-hidden"
+              className="relative rounded-2xl border border-slate-200 bg-white/90 shadow-sm hover:shadow-lg transition-shadow duration-200 overflow-hidden h-[200px]"
             >
               {/* Accent bar */}
               <div className="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-emerald-500 via-teal-500 to-sky-500" />
@@ -73,7 +73,7 @@ function Page() {
                   )}
                 </div>
 
-                <div className="mt-4 text-[15px] leading-relaxed text-slate-700">
+                <div className="mt-4 text-[15px] leading-relaxed text-slate-700 h-[150px] overflow-y-scroll">
                   {event.description}
                   <button
                     onClick={() => setSelectedEvent(event)}

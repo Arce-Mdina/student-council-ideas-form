@@ -33,13 +33,17 @@ export const eventsData = [
             <div>
                 <div>
                     Litter on the Astro pitch is a concern that many students have raised 
-                    over the years. In order to address this problem, we spoke with the staff 
+                    over the years. 
+                </div>
+
+                <br></br>
+
+                <div>
+                    In order to address this problem, we spoke with the staff 
                     in charge and decided that a feasible solution to address the litter on 
                     the Astro pitch was to ensure easy access to bins at both exits and 
                     entrances to the field.
                 </div>
-
-                {/* <br></br> */}
             </div>
         ),
         status: "Ongoing",
