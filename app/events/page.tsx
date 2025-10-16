@@ -2,11 +2,11 @@
 
 import React, { useEffect, useState } from 'react'
 
-import { eventsData } from '@/lib/eventsData'
+import { eventsData, type EventItem } from '@/lib/eventsData'
 
-const page = () => {
+function Page() {
 
-  const [selectedEvent, setSelectedEvent] = useState(null)
+  const [selectedEvent, setSelectedEvent] = useState<EventItem | null>(null)
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -148,4 +148,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page
