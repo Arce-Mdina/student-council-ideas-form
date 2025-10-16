@@ -2,11 +2,22 @@
 
 import React, { useEffect, useState } from 'react'
 
+// Minimal event shape used on this page only
+type EventLite = {
+  title: string;
+  description: React.ReactNode;
+  status: string; // "Ongoing" | "Completed" etc.
+  organiser: string;
+  result?: string;
+  progress?: string;
+  details?: React.ReactNode;
+};
+
 import { eventsData } from '@/lib/eventsData'
 
 function Page() {
 
-  const [selectedEvent, setSelectedEvent] = useState<unknown | null>(null)
+  const [selectedEvent, setSelectedEvent] = useState<EventLite | null>(null)
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -30,7 +41,7 @@ function Page() {
         </header>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {eventsData.map((event) => (
+          {(eventsData as EventLite[]).map((event) => (
             <article
               key={event.title}
               className="relative rounded-2xl border border-slate-200 bg-white/90 shadow-sm hover:shadow-lg transition-shadow duration-200 overflow-hidden"
@@ -88,9 +99,6 @@ function Page() {
           aria-label="Event details"
           className="fixed inset-0 z-50 flex items-center justify-center"
         >
-          {/** Safe alias for selected event fields */}
-          {(() => { /* no-op wrapper to allow const in JSX */ })()}
-
           {/* Backdrop closes on click */}
           <button
             aria-label="Close overlay"
@@ -107,46 +115,30 @@ function Page() {
               ✕
             </button>
 
-            {(() => {
-              const se = (selectedEvent as unknown) as Record<string, unknown>;
-              const title = typeof se['title'] === 'string' ? (se['title'] as string) : '';
-              const status = typeof se['status'] === 'string' ? (se['status'] as string) : '';
-              const organiser = typeof se['organiser'] === 'string' ? (se['organiser'] as string) : '';
-              const description = se['description'] as React.ReactNode;
-              const details = se['details'] as React.ReactNode | undefined;
-              const progress = typeof se['progress'] === 'string' ? (se['progress'] as string) : undefined;
-              const result = typeof se['result'] === 'string' ? (se['result'] as string) : undefined;
+            <h2 className="text-xl font-semibold text-slate-900">{selectedEvent.title}</h2>
+            <p className="mt-1 text-xs font-medium text-slate-500">{selectedEvent.status}</p>
 
-              const outcomeText =
-                status === 'Ongoing'
-                  ? (progress ?? result ?? '')
-                  : (result ?? progress ?? '');
+            <div className="mt-5">
+              <h3 className="text-base font-semibold text-slate-900">What this event did</h3>
+              <div className="prose prose-sm max-w-none text-slate-700">
+                {selectedEvent.details ? (
+                  <div>{selectedEvent.details}</div>
+                ) : (
+                  <p className="whitespace-pre-line">
+                    {selectedEvent.status === 'Ongoing'
+                      ? (selectedEvent.progress ?? selectedEvent.result ?? '')
+                      : (selectedEvent.result ?? selectedEvent.progress ?? '')}
+                  </p>
+                )}
+              </div>
+            </div>
 
-              return (
-                <>
-                  <h2 className="text-xl font-semibold text-slate-900">{title}</h2>
-                  <p className="mt-1 text-xs font-medium text-slate-500">{status}</p>
+            <div className="mt-6">
+              <h3 className="text-base font-semibold text-slate-900">Overview</h3>
+              <div className="prose prose-sm max-w-none text-slate-700">{selectedEvent.description}</div>
+            </div>
 
-                  <div className="mt-5">
-                    <h3 className="text-base font-semibold text-slate-900">What this event did</h3>
-                    <div className="prose prose-sm max-w-none text-slate-700">
-                      {details ? (
-                        <div>{details}</div>
-                      ) : (
-                        <p className="whitespace-pre-line">{outcomeText}</p>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="mt-6">
-                    <h3 className="text-base font-semibold text-slate-900">Overview</h3>
-                    <div className="prose prose-sm max-w-none text-slate-700">{description}</div>
-                  </div>
-
-                  <div className="mt-6 text-xs text-slate-500">Led by: {organiser}</div>
-                </>
-              );
-            })()}
+            <div className="mt-6 text-xs text-slate-500">Led by: {selectedEvent.organiser}</div>
           </div>
         </div>
       )}
