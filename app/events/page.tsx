@@ -1,8 +1,18 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { eventsData } from '@/lib/eventsData'
 
 const page = () => {
+
+  const [selectedEvent, setSelectedEvent] = useState(null)
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setSelectedEvent(null)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white py-16 flex flex-col">
@@ -52,6 +62,14 @@ const page = () => {
 
                 <div className="mt-4 text-[15px] leading-relaxed text-slate-700">
                   {event.description}
+                  {(event.result || event.progress) && (
+                    <button
+                      onClick={() => setSelectedEvent(event)}
+                      className="mt-3 text-sm font-medium text-emerald-700 underline hover:text-emerald-800"
+                    >
+                      {event.status === 'Ongoing' ? 'Progress' : 'Result'}
+                    </button>
+                  )}
                 </div>
 
               </div>
@@ -63,6 +81,67 @@ const page = () => {
           ))}
         </div>
       </div>
+      {selectedEvent && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${selectedEvent.title} details`}
+          className="fixed inset-0 z-50 flex items-center justify-center"
+        >
+          {/* Backdrop closes on click */}
+          <button
+            aria-label="Close overlay"
+            onClick={() => setSelectedEvent(null)}
+            className="absolute inset-0 bg-black/50"
+          />
+
+          {/* Modal card */}
+          <div className="relative z-10 w-[min(92vw,800px)] max-h-[80vh] overflow-y-auto rounded-xl bg-white p-6 shadow-xl">
+            <button
+              onClick={() => setSelectedEvent(null)}
+              className="absolute top-3 right-3 rounded px-2 py-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+            >
+              ✕
+            </button>
+
+            <h2 className="text-xl font-semibold text-slate-900">
+              {selectedEvent.title}
+            </h2>
+            <p className="mt-1 text-xs font-medium text-slate-500">
+              {selectedEvent.status}
+            </p>
+
+            {/* What the event did */}
+            <div className="mt-5">
+              <h3 className="text-base font-semibold text-slate-900">
+                What this event did
+              </h3>
+              <div className="prose prose-sm max-w-none text-slate-700">
+                {/* Prefer a rich details field if present; otherwise fall back to result/progress */}
+                {selectedEvent.details ? (
+                  <div>{selectedEvent.details}</div>
+                ) : (
+                  <p className="whitespace-pre-line">
+                    {selectedEvent.status === 'Ongoing'
+                      ? selectedEvent.progress
+                      : selectedEvent.result}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Include original description for context */}
+            <div className="mt-6">
+              <h3 className="text-base font-semibold text-slate-900">Overview</h3>
+              <div className="prose prose-sm max-w-none text-slate-700">
+                {selectedEvent.description}
+              </div>
+            </div>
+
+            <div className="mt-6 text-xs text-slate-500">Led by: {selectedEvent.organiser}</div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
