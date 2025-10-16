@@ -64,14 +64,12 @@ function Page() {
 
                 <div className="mt-4 text-[15px] leading-relaxed text-slate-700">
                   {event.description}
-                  {(event.result || event.progress) && (
-                    <button
-                      onClick={() => setSelectedEvent(event)}
-                      className="mt-3 text-sm font-medium text-emerald-700 underline hover:text-emerald-800"
-                    >
-                      {event.status === 'Ongoing' ? 'Progress' : 'Result'}
-                    </button>
-                  )}
+                  <button
+                    onClick={() => setSelectedEvent(event)}
+                    className="mt-3 text-sm font-medium text-emerald-700 underline hover:text-emerald-800"
+                  >
+                    {event.status === 'Ongoing' ? 'Progress' : 'Result'}
+                  </button>
                 </div>
 
               </div>
@@ -87,9 +85,12 @@ function Page() {
         <div
           role="dialog"
           aria-modal="true"
-          aria-label={`${selectedEvent.title} details`}
+          aria-label={`${(selectedEvent as any).title} details`}
           className="fixed inset-0 z-50 flex items-center justify-center"
         >
+          {/** Safe alias for selected event fields */}
+          {(() => { /* no-op wrapper to allow const in JSX */ })()}
+
           {/* Backdrop closes on click */}
           <button
             aria-label="Close overlay"
@@ -106,41 +107,47 @@ function Page() {
               ✕
             </button>
 
-            <h2 className="text-xl font-semibold text-slate-900">
-              {selectedEvent.title}
-            </h2>
-            <p className="mt-1 text-xs font-medium text-slate-500">
-              {selectedEvent.status}
-            </p>
+            {(() => {
+              const se = (selectedEvent as unknown) as Record<string, unknown>;
+              const title = typeof se['title'] === 'string' ? (se['title'] as string) : '';
+              const status = typeof se['status'] === 'string' ? (se['status'] as string) : '';
+              const organiser = typeof se['organiser'] === 'string' ? (se['organiser'] as string) : '';
+              const description = se['description'] as React.ReactNode;
+              const details = se['details'] as React.ReactNode | undefined;
+              const progress = typeof se['progress'] === 'string' ? (se['progress'] as string) : undefined;
+              const result = typeof se['result'] === 'string' ? (se['result'] as string) : undefined;
 
-            {/* What the event did */}
-            <div className="mt-5">
-              <h3 className="text-base font-semibold text-slate-900">
-                What this event did
-              </h3>
-              <div className="prose prose-sm max-w-none text-slate-700">
-                {/* Prefer a rich details field if present; otherwise fall back to result/progress */}
-                {selectedEvent.details ? (
-                  <div>{selectedEvent.details}</div>
-                ) : (
-                  <p className="whitespace-pre-line">
-                    {selectedEvent.status === 'Ongoing'
-                      ? selectedEvent.progress
-                      : selectedEvent.result}
-                  </p>
-                )}
-              </div>
-            </div>
+              const outcomeLabel = status === 'Ongoing' ? 'Progress' : 'Result';
+              const outcomeText =
+                status === 'Ongoing'
+                  ? (progress ?? result ?? '')
+                  : (result ?? progress ?? '');
 
-            {/* Include original description for context */}
-            <div className="mt-6">
-              <h3 className="text-base font-semibold text-slate-900">Overview</h3>
-              <div className="prose prose-sm max-w-none text-slate-700">
-                {selectedEvent.description}
-              </div>
-            </div>
+              return (
+                <>
+                  <h2 className="text-xl font-semibold text-slate-900">{title}</h2>
+                  <p className="mt-1 text-xs font-medium text-slate-500">{status}</p>
 
-            <div className="mt-6 text-xs text-slate-500">Led by: {selectedEvent.organiser}</div>
+                  <div className="mt-5">
+                    <h3 className="text-base font-semibold text-slate-900">What this event did</h3>
+                    <div className="prose prose-sm max-w-none text-slate-700">
+                      {details ? (
+                        <div>{details}</div>
+                      ) : (
+                        <p className="whitespace-pre-line">{outcomeText}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="mt-6">
+                    <h3 className="text-base font-semibold text-slate-900">Overview</h3>
+                    <div className="prose prose-sm max-w-none text-slate-700">{description}</div>
+                  </div>
+
+                  <div className="mt-6 text-xs text-slate-500">Led by: {organiser}</div>
+                </>
+              );
+            })()}
           </div>
         </div>
       )}
